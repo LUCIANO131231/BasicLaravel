@@ -13,6 +13,12 @@ return new class extends Migration
     {
         Schema::create('prestamos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('libro_id')->constrained('libros');
+            $table->string('nombre_usuario');
+            $table->string('email_usuario');
+            $table->date('fecha_prestamo');
+            $table->date('fecha_devolucion');
+            $table->boolean('devuelto')->default(false);
             $table->timestamps();
         });
     }
