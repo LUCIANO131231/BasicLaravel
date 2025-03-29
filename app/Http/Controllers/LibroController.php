@@ -14,18 +14,11 @@ class LibroController extends Controller
      */
     public function index()
     {
-        $libros = Libro::with(['autor', 'categoria'])->paginate(10);
-        return view('libros.index', compact('libros'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $autores = Autor::all();
-        $categorias = Categoria::all();
-        return view('libros.create', compact('autores', 'categorias'));
+        $libros = Libro::with(['autor', 'categoria'])->get();
+        return response()->json([
+            'success' => true,
+            'data' => $libros
+        ]);
     }
 
     /**
@@ -43,41 +36,12 @@ class LibroController extends Controller
             'stock' => 'required|integer|min:0'
         ]);
 
-        Libro::create($request->all());
+        $libro = Libro::create($request->all());
 
-        return redirect()->route('libros.index')
-            ->with('success', 'Libro creado exitosamente');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Libro creado exitosamente',
+            'data' => $libro
+        ], 201);
     }
 }

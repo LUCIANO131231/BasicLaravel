@@ -12,16 +12,12 @@ class AutorController extends Controller
      */
     public function index()
     {
-        $autores = Autor::paginate(10);
-        return view('autores.index', compact('autores'));
-    }
+        $autores = Autor::all();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('autores.create');
+        return response()->json([
+            'success' => true,
+            'data' => $autores
+        ]);
     }
 
     /**
@@ -34,41 +30,12 @@ class AutorController extends Controller
             'apellidos' => 'required|max:255',
         ]);
 
-        Autor::create($request->all());
+        $autor = Autor::create($request->all());
 
-        return redirect()->route('autores.index')
-            ->with('success', 'Autor creado exitosamente');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Autor creado exitosamente',
+            'data' => $autor
+        ], 201);
     }
 }

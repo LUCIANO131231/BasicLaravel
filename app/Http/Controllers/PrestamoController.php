@@ -13,17 +13,12 @@ class PrestamoController extends Controller
      */
     public function index()
     {
-        $prestamos = Prestamo::with('libro')->paginate(10);
-        return view('prestamos.index', compact('prestamos'));
-    }
+        $prestamos = Prestamo::with('libro')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $prestamos = Prestamo::with('libro')->paginate(10);
-        return view('prestamos.index', compact('prestamos'));
+        return response()->json([
+            'success' => true,
+            'data' => $prestamos
+        ]);
     }
 
     /**
@@ -40,46 +35,17 @@ class PrestamoController extends Controller
         ]);
 
         // Crear el préstamo
-        Prestamo::create($request->all());
+        $prestamo = Prestamo::create($request->all());
 
         // Reducir el stock del libro
         $libro = Libro::find($request->libro_id);
         $libro->stock = $libro->stock - 1;
         $libro->save();
 
-        return redirect()->route('prestamos.index')
-            ->with('success', 'Préstamo registrado exitosamente');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return response()->json([
+            'success' => true,
+            'message' => 'Préstamo registrado exitosamente',
+            'data' => $prestamo
+        ], 201);
     }
 }
